@@ -11,7 +11,7 @@ class ValidationError_MissingField(Exception):
         self.card = card
 
 class ValidationError_IncorrectType(Exception):
-    def __init__(self, message, field, file_path, card):
+    def __init__(self, message, field, offending_value, file_path, card):
         super().__init__(message)
         self.field = field
         self.offending_value = offending_value
@@ -107,7 +107,7 @@ def is_db_valid(json_db):
 
             for reference in card["references"]:
                 if type(reference) is not str:
-                    raise ValidationError_IncorrectType("Some references aren't strings", "references", reference, json_entry["path"], card)
+                    raise ValidationError_IncorrectType("Some references aren't strings", "references", str(reference), json_entry["path"], card)
 
 
             # Validate if IDs are unique
@@ -184,7 +184,7 @@ def read_json_data(data_folder="./data"):
 
 # Takes all the JSON files and formatts it as a CSV file compatible with Anki (please refer to: https://docs.ankiweb.net/importing/text-files.html)
 # Useful for importing all the data into Anki at once
-def JsonToCsv(json_db, separator="|||", dry_run=False):
+def JsonToAnkiCsv(json_db, separator="|||", dry_run=False):
 
     # Insert header information
     csv_str = ""
@@ -209,11 +209,10 @@ def JsonToCsv(json_db, separator="|||", dry_run=False):
 
     return csv_str
 
+
 # If the file has entries with different languages, put each language in a separate linear array
 def split_by_language():
     pass
-
-
 
 # Takes each JSON file and creates a TXT out of it
 # The goal here is to create a text file that can be consumed individually by a Text-to-Speech (TTS) program

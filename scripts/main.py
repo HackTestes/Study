@@ -8,7 +8,7 @@ try:
 except Exception as e:
     print(e)
 
-anki_csv = helpers.JsonToCsv(json_db)
+anki_csv = helpers.JsonToAnkiCsv(json_db)
 
 print(anki_csv)
 
