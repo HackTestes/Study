@@ -1,0 +1,7 @@
+{
+    "languages": ["en-US", "pt-BR"],
+    "templates": {
+        "Frente-Verso_pt-BR": {"fields": ["front", "back"]},
+        "Front-Back_en-US": {"fields": ["front", "back"]}
+    }
+}

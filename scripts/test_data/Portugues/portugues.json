@@ -1,0 +1,30 @@
+{
+    "subject": "Língua Portuguesa - Teste",
+    "general_references": [],
+    "cards": [
+
+        {
+            "deck": "Português::Pronomes",
+            "id": "Portugues_Pronome",
+            "template_type": "Frente-Verso_pt-BR",
+            "language": "pt-BR",
+            "tags": [],
+            "front": "O que é um pronome?",
+            "back": "Substitui um nome",
+            "extended_description": "",
+            "references": []
+        },
+
+        {
+            "deck": "Português::Conjunções",
+            "id": "Portugues_Conjunção",
+            "template_type": "Frente-Verso_pt-BR",
+            "language": "pt-BR",
+            "tags": [],
+            "front": "O que é uma conjunção?",
+            "back": "Conjunção é um termo que liga duas orações ou duas palavras de mesmo valor gramatical, estabelecendo uma relação entre elas.",
+            "extended_description": "",
+            "references": ["https://www.todamateria.com.br/conjuncao/"]
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+{
+    "subject": "Test JSON",
+    "general_references": [],
+    "cards": [
+
+        {
+            "deck": "Test",
+            "id": "Test_json",
+            "template_type": "Frente-Verso_pt-BR",
+            "language": "pt-BR",
+            "tags": [],
+            "front": "Front test",
+            "back": "Back test",
+            "extended_description": "",
+            "references": []
+        },
+
+        {
+            "deck": "Test",
+            "id": "Test_json_002",
+            "template_type": "Frente-Verso_pt-BR",
+            "language": "pt-BR",
+            "tags": [],
+            "front": "Front test",
+            "back": "Back test",
+            "extended_description": "",
+            "references": []
+        },
+
+        {
+            "deck": "Test",
+            "id": "Test_json_003",
+            "template_type": "Front-Back_en-US",
+            "language": "en-US",
+            "tags": [],
+            "front": "Front test",
+            "back": "Back test",
+            "extended_description": "",
+            "references": []
+        },
+
+        {
+            "deck": "Test",
+            "id": "Test_json_004",
+            "template_type": "Front-Back_en-US",
+            "language": "en-US",
+            "tags": [],
+            "front": "Front test",
+            "back": "Back test",
+            "extended_description": "",
+            "references": []
+        }
+    ]
+}

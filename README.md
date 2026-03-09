@@ -16,17 +16,10 @@ O arquivo de esquema vai ser útil para validar erros nos cartões de forma auto
 ```json
 {
     "languages": ["en-US", "pt-BR"],
-    "templates": [
-        {
-            "template_name": "Frente-Verso_pt-BR",
-            "template_fields": ["Front", "Back"] // These keys must exist in the cards for this template type
-        },
-        
-        {
-            "template_name": "Front-Back_en-US",
-            "template_fields": ["Front", "Back"]
-        }
-    ]
+    "templates": {
+        "Frente-Verso_pt-BR": {"fields": ["front", "back"]},
+        "Front-Back_en-US": {"fields": ["front", "back"]}
+    }
 }
 ```
 

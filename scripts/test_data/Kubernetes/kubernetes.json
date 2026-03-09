@@ -1,0 +1,30 @@
+{
+    "subject": "Kubernetes Glossary",
+    "general_references": ["https://kubernetes.io/docs/reference/glossary"],
+    "cards": [
+
+        {
+            "deck": "Kubernetes::Glossay",
+            "id": "Kubernetes_Glossary_Affinity",
+            "template_type": "Frente-Verso_pt-BR",
+            "language": "pt-BR",
+            "tags": [],
+            "front": "Affinity",
+            "back": "In Kubernetes, affinity is a set of rules that give hints to the scheduler about where to place pods. There are two kinds of affinity: \n  ->node affinity \n  ->pod-to-pod affinity",
+            "extended_description": "The rules are defined using the Kubernetes labels, and selectors specified in pods, and they can be either required or preferred, depending on how strictly you want the scheduler to enforce them.",
+            "references": []
+        },
+
+        {
+            "deck": "Kubernetes::Glossay",
+            "id": "Kubernetes_Glossary_Annotation",
+            "template_type": "Front-Back_en-US",
+            "language": "en-US",
+            "tags": [],
+            "front": "Annotation",
+            "back": "A key-value pair that is used to attach arbitrary non-identifying metadata to objects.",
+            "extended_description": "The metadata in an annotation can be small or large, structured or unstructured, and can include characters not permitted by labels. Clients such as tools and libraries can retrieve this metadata.",
+            "references": []
+        }
+    ]
+}
