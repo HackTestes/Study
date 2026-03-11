@@ -1,6 +1,7 @@
 import os
 import pathlib
 import json
+import re
 
 # Validation errors
 class ValidationError_MissingField(Exception):
@@ -200,6 +201,17 @@ def read_json_data(data_folder="./data"):
     return parsed_json_data
 
 
+# Takes a text string and transform some special characters into HTML equivalents
+# This is useful for CSV files that Anki can import, especially since some chars (like the "line-break") con completely break the CSV file
+def TextToHTML(input_text):
+
+    transformed_text = input_text
+    transformed_text = transformed_text.replace("\n", "<br/>")
+    transformed_text = re.sub(r"\*\*(.*?)\*\*", r"<b>\1<b/>", transformed_text)
+    transformed_text = re.sub(r"\*(.*?)\*", r"<i>\1<i/>", transformed_text)
+
+    return transformed_text
+
 # Takes all the JSON files and formatts it as a CSV file compatible with Anki (please refer to: https://docs.ankiweb.net/importing/text-files.html)
 # Useful for importing all the data into Anki at once
 def JsonToAnkiCsv(json_db, separator="|||", dry_run=False):
@@ -222,8 +234,8 @@ def JsonToAnkiCsv(json_db, separator="|||", dry_run=False):
                 csv_str += card["id"] + separator
                 csv_str += card["template_type"] + separator
                 csv_str += " ".join(card["tags"]) + separator
-                csv_str += card["front"] + separator
-                csv_str += card["back"] + "\n"
+                csv_str += TextToHTML(card["front"]) + separator
+                csv_str += TextToHTML(card["back"]) + "\n"
 
     return csv_str
 

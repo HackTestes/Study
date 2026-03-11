@@ -380,6 +380,14 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(e.exception.cards[1]["front"], "Front test 002")
         self.assertEqual(e.exception.cards[1]["back"], "Back test 002")
 
+    def test_TextToHTML_regular_case(self):
+        result = helpers.TextToHTML("A **simple** *text* for testing\n")
+        self.assertEqual("A <b>simple<b/> <i>text<i/> for testing<br/>", result)
+
+    def test_TextToHTML_regular_case_multiple(self):
+        result = helpers.TextToHTML("A **simple** *text* for testing\n But I **like** to make things difficult *for me*!\n\n")
+        self.assertEqual("A <b>simple<b/> <i>text<i/> for testing<br/> But I <b>like<b/> to make things difficult <i>for me<i/>!<br/><br/>", result)
+
 
 if __name__ == '__main__':
     unittest.main()
