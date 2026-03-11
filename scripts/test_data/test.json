@@ -21,8 +21,8 @@
             "template_type": "Frente-Verso_pt-BR",
             "language": "pt-BR",
             "tags": [],
-            "front": "Front test",
-            "back": "Back test",
+            "front": "Front test 002",
+            "back": "Back test 002",
             "extended_description": "",
             "references": []
         },
@@ -33,8 +33,8 @@
             "template_type": "Front-Back_en-US",
             "language": "en-US",
             "tags": [],
-            "front": "Front test",
-            "back": "Back test",
+            "front": "Front test 003",
+            "back": "Back test 003",
             "extended_description": "",
             "references": []
         },
@@ -45,8 +45,8 @@
             "template_type": "Front-Back_en-US",
             "language": "en-US",
             "tags": [],
-            "front": "Front test",
-            "back": "Back test",
+            "front": "Front test 004",
+            "back": "Back test 004",
             "extended_description": "",
             "references": []
         }
