@@ -16,7 +16,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_missing_field_deck(self):
 
         missing_field_db = copy.deepcopy(valid_db)
-        missing_field_db["entries"][0]["data"]["cards"][0].pop("deck")
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0].pop("deck")
 
         with self.assertRaises(helpers.ValidationError_MissingField) as e:
             result = helpers.is_db_valid(missing_field_db)
@@ -37,7 +37,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_incorrect_type_deck(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][0]["deck"] = 1
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["deck"] = 1
 
         with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -51,7 +51,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_missing_field_id(self):
 
         missing_field_db = copy.deepcopy(valid_db)
-        missing_field_db["entries"][0]["data"]["cards"][0].pop("id")
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0].pop("id")
 
         with self.assertRaises(helpers.ValidationError_MissingField) as e:
             result = helpers.is_db_valid(missing_field_db)
@@ -72,7 +72,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_incorrect_type_id(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][0]["id"] = 1
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["id"] = 1
 
         with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -86,7 +86,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_missing_field_template_type(self):
 
         missing_field_db = copy.deepcopy(valid_db)
-        missing_field_db["entries"][0]["data"]["cards"][0].pop("template_type")
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0].pop("template_type")
 
         with self.assertRaises(helpers.ValidationError_MissingField) as e:
             result = helpers.is_db_valid(missing_field_db)
@@ -107,7 +107,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_incorrect_type_template_type(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][0]["template_type"] = 1
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["template_type"] = 1
 
         with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -121,7 +121,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_missing_field_language(self):
 
         missing_field_db = copy.deepcopy(valid_db)
-        missing_field_db["entries"][0]["data"]["cards"][0].pop("language")
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0].pop("language")
 
         with self.assertRaises(helpers.ValidationError_MissingField) as e:
             result = helpers.is_db_valid(missing_field_db)
@@ -142,7 +142,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_incorrect_type_language(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][0]["language"] = 1
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["language"] = 1
 
         with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -156,7 +156,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_missing_field_tags(self):
 
         missing_field_db = copy.deepcopy(valid_db)
-        missing_field_db["entries"][0]["data"]["cards"][0].pop("tags")
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0].pop("tags")
 
         with self.assertRaises(helpers.ValidationError_MissingField) as e:
             result = helpers.is_db_valid(missing_field_db)
@@ -177,7 +177,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_incorrect_type_tags(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][0]["tags"] = 1
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["tags"] = 1
 
         with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -190,7 +190,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_incorrect_type_items_tags(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][0]["tags"].append(1)
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["tags"].append(1)
 
         with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -204,7 +204,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_missing_field_extended_description(self):
 
         missing_field_db = copy.deepcopy(valid_db)
-        missing_field_db["entries"][0]["data"]["cards"][0].pop("extended_description")
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0].pop("extended_description")
 
         with self.assertRaises(helpers.ValidationError_MissingField) as e:
             result = helpers.is_db_valid(missing_field_db)
@@ -225,7 +225,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_incorrect_type_extended_description(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][0]["extended_description"] = 1
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["extended_description"] = 1
 
         with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -239,7 +239,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_missing_field_references(self):
 
         missing_field_db = copy.deepcopy(valid_db)
-        missing_field_db["entries"][0]["data"]["cards"][0].pop("references")
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0].pop("references")
 
         with self.assertRaises(helpers.ValidationError_MissingField) as e:
             result = helpers.is_db_valid(missing_field_db)
@@ -260,7 +260,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_incorrect_type_references(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][0]["references"] = 1
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["references"] = 1
 
         with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -273,7 +273,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_incorrect_type_items_references(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][0]["references"].append(1)
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["references"].append(1)
 
         with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -286,7 +286,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_duplicate_id(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][1]["id"] = "Test_json"
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][1]["id"] = "Test_json"
 
         with self.assertRaises(helpers.ValidationError_DuplicateId) as e:
             result = helpers.is_db_valid(incorrect_type_db)
@@ -301,7 +301,7 @@ class TestMethods(unittest.TestCase):
     def test_db_validation_error_duplicate_id_differnt_files(self):
 
         incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries"][0]["data"]["cards"][1]["id"] = "Test_json"
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][1]["id"] = "Test_json"
 
         with self.assertRaises(helpers.ValidationError_DuplicateId) as e:
             result = helpers.is_db_valid(incorrect_type_db)
