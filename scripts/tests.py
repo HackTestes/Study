@@ -283,5 +283,36 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
         self.assertEqual(e.exception.card["references"][0], 1)
 
+    def test_db_validation_error_duplicate_id(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["entries"][0]["data"]["cards"][1]["id"] = "Test_json"
+
+        with self.assertRaises(helpers.ValidationError_DuplicateId) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(e.exception.duplicated_id, "Test_json")
+        self.assertEqual(e.exception.file_paths, ["./scripts/test_data/test.json", "./scripts/test_data/test.json"])
+        self.assertEqual(e.exception.cards[0]["front"], "Front test")
+        self.assertEqual(e.exception.cards[0]["back"], "Back test")
+        self.assertEqual(e.exception.cards[1]["front"], "Front test 002")
+        self.assertEqual(e.exception.cards[1]["back"], "Back test 002")
+
+    def test_db_validation_error_duplicate_id_differnt_files(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["entries"][0]["data"]["cards"][1]["id"] = "Test_json"
+
+        with self.assertRaises(helpers.ValidationError_DuplicateId) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(e.exception.duplicated_id, "Test_json")
+        self.assertEqual(e.exception.file_paths, ["./scripts/test_data/test.json", "./scripts/test_data/test.json"])
+        self.assertEqual(e.exception.cards[0]["front"], "Front test")
+        self.assertEqual(e.exception.cards[0]["back"], "Back test")
+        self.assertEqual(e.exception.cards[1]["front"], "Front test 002")
+        self.assertEqual(e.exception.cards[1]["back"], "Back test 002")
+
+
 if __name__ == '__main__':
     unittest.main()
