@@ -223,7 +223,7 @@ def JsonToAnkiCsv(json_db, separator="|||", dry_run=False):
     csv_str += f"#guid column:2\n"
     csv_str += f"#notetype column:3\n"
     csv_str += f"#tags column:4\n"
-    sv_str += f"#html:true\n"
+    csv_str += f"#html:true\n"
 
     # Iterate over every entry and add it to the csv file
     # I expect the input to be an array with each entry being the parsed JSON file
