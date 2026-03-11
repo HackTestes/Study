@@ -45,7 +45,8 @@ def is_db_valid(json_db):
     schema = json_db["schema"]
 
     # Store all unique IDs for duplication detection
-    # {id_key: {"entry_index": entry_index, "card_index", card_index}}
+    # {id_key: {"entry_index": entry_index, "card_index", card_index}} (outdated, just kept for future reference)
+    # {id_key: {"entry": entry, "card", card}} -> this should be referencing the same object in RAM as the original dict
     ids = {}
 
     # Loop over every entry
@@ -117,14 +118,18 @@ def is_db_valid(json_db):
 
                 # We have a duplicate!
                 # Use the id storage to get all the details about the other card with the same ID
-                first_occurrence_entry = json_db["entries"][ids[card_id]["entry_index"]]
+                #first_occurrence_entry = json_db["entries"][ids[card_id]["entry_index"]] (outdated, just kept for future reference)
+                first_occurrence_entry = ids[card_id]["entry"]
                 first_occurrence_path = first_occurrence_entry["path"]
-                first_occurrence_card = first_occurrence_entry["data"]["cards"][ids[card_id]["card_index"]]
+
+                #first_occurrence_card = first_occurrence_entry["data"]["cards"][ids[card_id]["card_index"]] (outdated, just kept for future reference)
+                first_occurrence_card = ids[card_id]["card"]
 
                 raise ValidationError_DuplicateId("Error, you have duplicated IDs. They must be unique", card_id, [first_occurrence_path, json_entry["path"]], [first_occurrence_card, card])
             else:
                 # All good, just add it to the IDs storage
-                ids[card["id"]] = {"entry_index": entry_index, "card_index": card_index}
+                #ids[card["id"]] = {"entry_index": entry_index, "card_index": card_index}
+                ids[card["id"]] = {"entry": json_entry, "card": card}
 
             # Validate if the template type exists in the schema
             if card["template_type"] not in schema["templates"]:
@@ -146,19 +151,11 @@ def is_db_valid(json_db):
 
     return True
 
-
-def valid_template(json_schema, card):
-
-    # In case the template is incorrect
-
-    # If the template is correct
-    return True
-
 # Parses all the the JSON files in the data folder
 # This allows me to just update the JSON files, since the code will adapt itself automatically
 def read_json_data(data_folder="./data"):
 
-    parsed_json_data = {"schema": {}, "entries": []}
+    parsed_json_data = {"schema": {}, "entries": [], "entries_idx_path": {}}
 
     # Add the schema information
     print(f"Parsing schema information at: {data_folder}/schema.json")
@@ -178,6 +175,7 @@ def read_json_data(data_folder="./data"):
                 # Make sure we report what we are doing to the user
                 print(f"Parsing JSON file: {path}")
                 parsed_json_data["entries"].append( {"data": json.loads(open(path, encoding="UTF-8").read()), "path": path} )
+                parsed_json_data["entries_idx_path"][path] = parsed_json_data["entries"][-1]
 
     return parsed_json_data
 
