@@ -51,6 +51,26 @@ def is_db_valid(json_db):
 
     # Loop over every entry
     for entry_index, json_entry in enumerate(json_db["entries"]):
+
+        # Validate if entry fields are correct
+        if "subject" not in json_entry["data"]:
+            raise ValidationError_MissingField("The entry lacks a subject field", "subject", json_entry["path"], None)
+
+        if type(json_entry["data"]["subject"]) is not str:
+            raise ValidationError_IncorrectType("The subject field isn't a String", "subject", str(json_entry["data"]["subject"]), json_entry["path"], None)
+
+
+        if "general_references" not in json_entry["data"]:
+            raise ValidationError_MissingField("The card lacks the general_references field", "general_references", json_entry["path"], None)
+
+        if type(json_entry["data"]["general_references"]) is not list:
+            raise ValidationError_IncorrectType("The general_references field isn't a list", "general_references", str(json_entry["data"]["general_references"]), json_entry["path"], None)
+
+        for reference in json_entry["data"]["general_references"]:
+            if type(reference) is not str:
+                raise ValidationError_IncorrectType("Some references aren't strings", "general_references", str(reference), json_entry["path"], None)
+
+        # Now do it for each card
         for card_index, card in enumerate(json_entry["data"]["cards"]):
 
             # Validate if the normal entries exist and have the correct type

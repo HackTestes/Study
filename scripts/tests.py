@@ -12,6 +12,73 @@ valid_db = helpers.read_json_data(test_path)
 
 class TestMethods(unittest.TestCase):
 
+    # Entry fields
+    # subject
+    def test_db_validation_error_missing_field_subject(self):
+
+        missing_field_db = copy.deepcopy(valid_db)
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"].pop("subject")
+
+        with self.assertRaises(helpers.ValidationError_MissingField) as e:
+            result = helpers.is_db_valid(missing_field_db)
+
+        self.assertEqual(e.exception.missing_field, "subject")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_incorrect_type_subject(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["subject"] = 1
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(e.exception.field, "subject")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
+        self.assertEqual(e.exception.card, None)
+
+    # general_references
+    def test_db_validation_error_missing_field_general_references(self):
+
+        missing_field_db = copy.deepcopy(valid_db)
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"].pop("general_references")
+
+        with self.assertRaises(helpers.ValidationError_MissingField) as e:
+            result = helpers.is_db_valid(missing_field_db)
+
+        self.assertEqual(e.exception.missing_field, "general_references")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_incorrect_type_general_references(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["general_references"] = 1
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(e.exception.field, "general_references")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_incorrect_type_items_general_references(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["general_references"].append(1)
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(e.exception.field, "general_references")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
+        self.assertEqual(e.exception.card, None)
+
+    # Card fields
     # deck
     def test_db_validation_error_missing_field_deck(self):
 
