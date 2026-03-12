@@ -12,6 +12,9 @@ valid_db = helpers.read_json_data(test_path)
 
 class TestMethods(unittest.TestCase):
 
+    # Validation tests
+    # These tests essentially take the valid database (actually a copy of it) and then inject errors
+
     # Schema
     # languages
     def test_db_validation_error_missing_field_schema_languages(self):
@@ -473,11 +476,11 @@ class TestMethods(unittest.TestCase):
 
     def test_db_validation_error_duplicate_id(self):
 
-        incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][1]["id"] = "Test_json"
+        duplicated_id_db = copy.deepcopy(valid_db)
+        duplicated_id_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][1]["id"] = "Test_json"
 
         with self.assertRaises(helpers.ValidationError_DuplicateId) as e:
-            result = helpers.is_db_valid(incorrect_type_db)
+            result = helpers.is_db_valid(duplicated_id_db)
 
         self.assertEqual(e.exception.duplicated_id, "Test_json")
         self.assertEqual(e.exception.file_paths, ["./scripts/test_data/test.json", "./scripts/test_data/test.json"])
@@ -486,20 +489,99 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(e.exception.cards[1]["front"], "Front test 002")
         self.assertEqual(e.exception.cards[1]["back"], "Back test 002")
 
-    def test_db_validation_error_duplicate_id_differnt_files(self):
+    def test_db_validation_error_duplicate_id_different_files(self):
 
-        incorrect_type_db = copy.deepcopy(valid_db)
-        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][1]["id"] = "Test_json"
+        duplicated_id_db = copy.deepcopy(valid_db)
+        duplicated_id_db["entries_idx_path"]["./scripts/test_data/Kubernetes/kubernetes.json"]["data"]["cards"][1]["id"] = "Test_json"
 
         with self.assertRaises(helpers.ValidationError_DuplicateId) as e:
-            result = helpers.is_db_valid(incorrect_type_db)
+            result = helpers.is_db_valid(duplicated_id_db)
 
         self.assertEqual(e.exception.duplicated_id, "Test_json")
-        self.assertEqual(e.exception.file_paths, ["./scripts/test_data/test.json", "./scripts/test_data/test.json"])
+        self.assertEqual(e.exception.file_paths, ["./scripts/test_data/test.json", "./scripts/test_data/Kubernetes/kubernetes.json"])
         self.assertEqual(e.exception.cards[0]["front"], "Front test")
         self.assertEqual(e.exception.cards[0]["back"], "Back test")
-        self.assertEqual(e.exception.cards[1]["front"], "Front test 002")
-        self.assertEqual(e.exception.cards[1]["back"], "Back test 002")
+        self.assertEqual(e.exception.cards[1]["front"], "Annotation")
+        self.assertEqual(e.exception.cards[1]["back"], "A key-value pair that is used to attach arbitrary non-identifying metadata to objects.")
+
+    # Template specific checks
+    def test_db_validation_error_invalid_template(self):
+
+        invalid_template_db = copy.deepcopy(valid_db)
+        invalid_template_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["template_type"] = "template_that_does_not_exist"
+
+        with self.assertRaises(helpers.ValidationError_InvalidTemplate) as e:
+            result = helpers.is_db_valid(invalid_template_db)
+
+        self.assertEqual(e.exception.invalid_template, "template_that_does_not_exist")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
+        self.assertEqual(e.exception.card, {
+            "deck": "Test",
+            "id": "Test_json",
+            "template_type": "template_that_does_not_exist",
+            "language": "pt-BR",
+            "tags": [],
+            "front": "Front test",
+            "back": "Back test",
+            "extended_description": "",
+            "references": []
+        })
+
+    def test_db_validation_missing_field_template_specific_field(self):
+
+        missing_field_db = copy.deepcopy(valid_db)
+        missing_field_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0].pop("front")
+
+        with self.assertRaises(helpers.ValidationError_MissingField) as e:
+            result = helpers.is_db_valid(missing_field_db)
+
+        self.assertEqual(e.exception.missing_field, "front")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
+        self.assertEqual(e.exception.card, {
+            "deck": "Test",
+            "id": "Test_json",
+            "template_type": "Frente-Verso_pt-BR",
+            "language": "pt-BR",
+            "tags": [],
+            "back": "Back test",
+            "extended_description": "",
+            "references": []
+        })
+
+    def test_db_validation_error_incorrect_type_template_specific_field(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["front"] = 1
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(e.exception.field, "front")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
+        self.assertEqual(e.exception.card["front"], 1)
+
+    def test_db_validation_error_invalid_language(self):
+
+        invalid_template_db = copy.deepcopy(valid_db)
+        invalid_template_db["entries_idx_path"]["./scripts/test_data/test.json"]["data"]["cards"][0]["language"] = "language_that_does_not_exist"
+
+        with self.assertRaises(helpers.ValidationError_InvalidLanguage) as e:
+            result = helpers.is_db_valid(invalid_template_db)
+
+        self.assertEqual(e.exception.invalid_language, "language_that_does_not_exist")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/test.json")
+        self.assertEqual(e.exception.card, {
+            "deck": "Test",
+            "id": "Test_json",
+            "template_type": "Frente-Verso_pt-BR",
+            "language": "language_that_does_not_exist",
+            "tags": [],
+            "front": "Front test",
+            "back": "Back test",
+            "extended_description": "",
+            "references": []
+        })
 
     def test_TextToHTML_regular_case(self):
         result = helpers.TextToHTML("A **simple** *text* for testing\n")
@@ -508,7 +590,6 @@ class TestMethods(unittest.TestCase):
     def test_TextToHTML_regular_case_multiple(self):
         result = helpers.TextToHTML("A **simple** *text* for testing\n But I **like** to make things difficult *for me*!\n\n")
         self.assertEqual("A <b>simple<b/> <i>text<i/> for testing<br/> But I <b>like<b/> to make things difficult <i>for me<i/>!<br/><br/>", result)
-
 
 if __name__ == '__main__':
     unittest.main()

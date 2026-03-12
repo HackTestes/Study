@@ -202,7 +202,7 @@ def is_db_valid(json_db):
 
             # Validate if the language is available according to the schema
             if card["language"] not in schema["languages"]:
-                raise ValidationError_InvalidTemplate("Invalid template type", card["template_type"], json_entry["path"], card)
+                raise ValidationError_InvalidLanguage("Invalid language", card["language"], json_entry["path"], card)
 
     return True
 
