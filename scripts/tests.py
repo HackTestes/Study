@@ -12,6 +12,127 @@ valid_db = helpers.read_json_data(test_path)
 
 class TestMethods(unittest.TestCase):
 
+    # Schema
+    # languages
+    def test_db_validation_error_missing_field_schema_languages(self):
+
+        missing_field_db = copy.deepcopy(valid_db)
+        missing_field_db["schema"].pop("languages")
+
+        with self.assertRaises(helpers.ValidationError_MissingField) as e:
+            result = helpers.is_db_valid(missing_field_db)
+
+        self.assertEqual(e.exception.missing_field, "languages")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/schema.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_incorrect_type_schema_languages(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["schema"]["languages"] = 1
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(e.exception.field, "languages")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/schema.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_incorrect_type_items_schema_languages(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["schema"]["languages"].append(1)
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(e.exception.field, "languages")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/schema.json")
+        self.assertEqual(e.exception.card, None)
+
+    # templates
+    def test_db_validation_error_missing_field_schema_templates(self):
+
+        missing_field_db = copy.deepcopy(valid_db)
+        missing_field_db["schema"].pop("templates")
+
+        with self.assertRaises(helpers.ValidationError_MissingField) as e:
+            result = helpers.is_db_valid(missing_field_db)
+
+        self.assertEqual(e.exception.missing_field, "templates")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/schema.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_incorrect_type_schema_templates(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["schema"]["templates"] = 1
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(e.exception.field, "templates")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/schema.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_incorrect_type_items_schema_templates(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["schema"]["templates"]["errored_template"] = 1
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(str(e.exception), "Some templates aren't dicts")
+        self.assertEqual(e.exception.field, "errored_template")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/schema.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_missing_field_items_schema_templates_fields(self):
+
+        missing_field_db = copy.deepcopy(valid_db)
+        missing_field_db["schema"]["templates"]["errored_template"] = {}
+
+        with self.assertRaises(helpers.ValidationError_MissingField) as e:
+            result = helpers.is_db_valid(missing_field_db)
+
+        self.assertEqual(str(e.exception), "The template (errored_template) lacks the 'fields' field")
+        self.assertEqual(e.exception.missing_field, "errored_template")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/schema.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_incorrect_type_items_schema_templates_fields(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["schema"]["templates"]["errored_template"] = {"fields": 1}
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(str(e.exception), "The template (errored_template) 'fields' isn't a list")
+        self.assertEqual(e.exception.field, "errored_template")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/schema.json")
+        self.assertEqual(e.exception.card, None)
+
+    def test_db_validation_error_incorrect_type_items_schema_templates_each_field(self):
+
+        incorrect_type_db = copy.deepcopy(valid_db)
+        incorrect_type_db["schema"]["templates"]["errored_template"] = {"fields": ["A", "B", 1]}
+
+        with self.assertRaises(helpers.ValidationError_IncorrectType) as e:
+            result = helpers.is_db_valid(incorrect_type_db)
+
+        self.assertEqual(str(e.exception), "Some template (errored_template) fields aren't Strings")
+        self.assertEqual(e.exception.field, "errored_template")
+        self.assertEqual(e.exception.offending_value, "1")
+        self.assertEqual(e.exception.file_path, "./scripts/test_data/schema.json")
+        self.assertEqual(e.exception.card, None)
+
     # Entry fields
     # subject
     def test_db_validation_error_missing_field_subject(self):

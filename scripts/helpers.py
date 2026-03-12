@@ -45,8 +45,42 @@ def is_db_valid(json_db):
     # Rename the schema to make it easier to use
     schema = json_db["schema"]
 
-    # Store all unique IDs for duplication detection
+    # Validate the schema
+    # langauges
+    if "languages" not in schema:
+        raise ValidationError_MissingField("The schema lacks the languages field", "languages", schema["path"], None)
+
+    if type(schema["languages"]) is not list:
+        raise ValidationError_IncorrectType("The languages field isn't a list", "languages", str(schema["languages"]), schema["path"], None)
+
+    for lang in schema["languages"]:
+        if type(lang) is not str:
+            raise ValidationError_IncorrectType("Some languages aren't strings", "languages", str(lang), schema["path"], None)
+
+    # Templates
+    if "templates" not in schema:
+        raise ValidationError_MissingField("The schema lacks the templates field", "templates", schema["path"], None)
+
+    if type(schema["templates"]) is not dict:
+        raise ValidationError_IncorrectType("The templates field isn't a dict", "templates", str(schema["templates"]), schema["path"], None)
+
+    for template_key, template_value in schema["templates"].items():
+        if type(template_value) is not dict:
+            raise ValidationError_IncorrectType("Some templates aren't dicts", template_key, str(template_value), schema["path"], None)
+
+        if "fields" not in template_value:
+            raise ValidationError_MissingField(f"The template ({template_key}) lacks the 'fields' field", template_key, schema["path"], None)
+
+        if type(template_value["fields"]) is not list:
+            raise ValidationError_IncorrectType(f"The template ({template_key}) 'fields' isn't a list", template_key, str(template_value["fields"]), schema["path"], None)
+
+        for field in template_value["fields"]:
+            if type(field) is not str:
+                raise ValidationError_IncorrectType(f"Some template ({template_key}) fields aren't Strings", template_key, str(field), schema["path"], None)
+
+
     # {id_key: {"entry_index": entry_index, "card_index", card_index}} (outdated, just kept for future reference)
+    # Store all unique IDs for duplication detection
     # {id_key: {"entry": entry, "card", card}} -> this should be referencing the same object in RAM as the original dict
     ids = {}
 
@@ -181,6 +215,7 @@ def read_json_data(data_folder="./data"):
     # Add the schema information
     print(f"Parsing schema information at: {data_folder}/schema.json")
     parsed_json_data["schema"] = json.loads(open(f"{data_folder}/schema.json", encoding="UTF-8").read())
+    parsed_json_data["schema"]["path"] = f"{data_folder}/schema.json" # Attach path info for better error messages
 
     for (root,dirs,files) in os.walk(data_folder, topdown=True):
 
