@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rank cadidates  based on text</title>
+    <style>
+
+        /* General table styling */
+        table {
+        border-collapse: collapse; /* Single borders */
+        width: 100%;
+        font-family: sans-serif;
+        }
+
+        /* Header cell styling */
+        th {
+        background-color: #f6f8fa; /* GitHub light mode header background */
+        border: 1px solid #d0d7de;
+        padding: 9px;
+        text-align: left;
+        font-weight: 600;
+        }
+
+        /* Data cell styling */
+        td {
+        border: 1px solid #d0d7de;
+        padding: 9px;
+        }
+
+        /* Alternating row colors for the body */
+        tbody tr:nth-child(even) {
+        background-color: #f8f8f8; /* Light gray for even rows */
+        }
+
+        /* Remove side borders for a cleaner look */
+        th, td {
+            border-left: none;
+            border-right: none;
+        }
+    </style>
+</head>
+<body>
+    <label for="fields">Campos (separados por vírgula): </label>
+    <br>
+    <textarea id="fields" name="fields" rows="5" cols="125">
+número de inscrição, nome do candidato em ordem alfabética, nota final na prova objetiva de conhecimentos básicos (P1), número de acertos na prova objetiva de conhecimentos básicos (P1), nota final na prova objetiva de conhecimentos específicos (P2), número de acertos na prova objetiva de conhecimentos específicos (P2), nota final nas provas objetivas
+    </textarea>
+    <br><br>
+
+    <label for="row_sep">Separador (caracter que separa cada candidato): </label>
+    <input type="text" id="row_sep" name="row_sep" size="50" value="/">
+    <br><br>
+
+    <label for="field_sep">Separador (caracter que separa cada campo do candidato): </label>
+    <input type="text" id="field_sep" name="field_sep" size="50" value=",">
+    <br><br>
+
+    <label>Ordenar por (campo que estabelece a ordem de classificação): </label>
+    <div id="order_by_div">
+    </div>
+    <br><br>
+
+    <label for="cadidate_info">Texto (com as informações de cada candidato): </label>
+    <br>
+    <textarea id="cadidate_info" name="cadidate_info" rows="25" cols="50"></textarea>
+    <br><br>
+
+    <h2>Lista de classificação</h2>
+    <div id="classification_table"></div>
+
+    <script defer>
+        const fields_input = document.querySelector("#fields");
+        const row_sep_input = document.querySelector("#row_sep");
+        const field_sep_input = document.querySelector("#field_sep");
+        const oder_by_field_div = document.querySelector("#order_by_div");
+        const candidate_info_input = document.querySelector("#cadidate_info");
+        const classification_table = document.querySelector("#classification_table");
+
+        // Parse the fields
+        function parse_fields(fields_str, field_sep)
+        {
+            return fields_str.trim().split(field_sep).map((item) => {return item.trim()});
+        }
+
+        // Update the radio input based on the parsed fields data
+        function update_radio_btns(fields)
+        {
+            let radio_html = ""
+            for (idx in fields)
+            {
+                let field = fields[idx];
+                radio_html += `<input type="radio" id="order_by_${field}" name="order_by" value="${field}"><label for="order_by_${field}">${field}</label><br>`;
+            }
+            oder_by_field_div.innerHTML = radio_html;
+        }
+
+        fields_input.addEventListener("input", () => {
+            const fields_str = event.target.value;
+
+            // Parse the data and update the HTML
+            let fields = parse_fields(fields_str, ",");
+
+            update_radio_btns(fields)
+        });
+
+        // https://stackoverflow.com/a/4760279
+        function dynamic_sort(property)
+        {
+            return function (a,b)
+            {
+                var result = (a.get(property) < b.get(property)) ? -1 : (a.get(property) > b.get(property)) ? 1 : 0;
+                return result * -1;
+            }
+        }
+
+        // Parse the data from the text input
+        function parse_candidate_data(cadidate_info_str, fields, row_sep, field_sep, order_by_field_str)
+        {
+            let candidate_info = [];
+
+            const candidate_rows = cadidate_info_str.split(row_sep);
+            for (row_idx in candidate_rows)
+            {
+                let candidate_fields = candidate_rows[row_idx].split(field_sep);
+
+                // Convert each row into a map
+                let candidate_info_map = new Map;
+                for (idx in fields)
+                {
+                    candidate_info_map.set(fields[idx], candidate_fields[idx].trim());
+                }
+                candidate_info.push(candidate_info_map);
+            }
+
+            // Order the list based on the order by field
+            return candidate_info.sort(dynamic_sort(order_by_field_str));
+        }
+
+        // Build the table
+        function build_calssification_table(cadidate_info, fields, order_by_field_str)
+        {
+            let table_html = "<table>"
+
+            // Build the table header
+            table_html += "<tr>"
+            table_html += "<th>Classificação</th>"
+                for (field_idx in fields)
+                {
+                    console.log(field_idx, fields[field_idx]);
+                    table_html += `<th>${ fields[field_idx] }</th>`;
+                }
+            table_html += "</tr>"
+
+            // Build the rows
+            for (let row_idx = 0; row_idx < cadidate_info.length; row_idx++)
+            {
+                table_html += "<tr>"
+                table_html += `<td>${ row_idx+1 }</td>`;
+                for (field_idx in fields)
+                {
+                    table_html += `<td>${ cadidate_info[row_idx].get(fields[field_idx]) }</td>`;
+                }
+                table_html += "</tr>"
+            }
+
+            table_html += "</table>"
+
+            return table_html;
+        }
+
+        candidate_info_input.addEventListener("input", () => {
+            // Parse the data and update the HTML
+            let fields = parse_fields(fields_input.value, ",");
+            let order_by_field_str = document.querySelector('input[name="order_by"]:checked').value;
+            let candidate_info = parse_candidate_data(candidate_info_input.value, fields, row_sep_input.value, field_sep_input.value, order_by_field_str);
+
+            classification_table.innerHTML = build_calssification_table(candidate_info, fields, order_by_field_str);
+        });
+
+    </script>
+</body>
+</html>
