@@ -43,7 +43,7 @@
 <body>
     <label for="fields">Campos (separados por vírgula): </label>
     <br>
-    <textarea id="fields" name="fields" rows="5" cols="125" placeholder="número de inscrição, nome do candidato em ordem alfabética, nota final na prova objetiva de conhecimentos básicos (P1), número de acertos na prova objetiva de conhecimentos básicos (P1), nota final na prova objetiva de conhecimentos específicos (P2), número de acertos na prova objetiva de conhecimentos específicos (P2) e nota final nas provas objetivas"></textarea>
+    <textarea id="fields" name="fields" rows="9" cols="55" placeholder="número de inscrição, nome do candidato em ordem alfabética, nota final na prova objetiva de conhecimentos básicos (P1), número de acertos na prova objetiva de conhecimentos básicos (P1), nota final na prova objetiva de conhecimentos específicos (P2), número de acertos na prova objetiva de conhecimentos específicos (P2) e nota final nas provas objetivas"></textarea>
     <br><br>
 
     <label for="row_sep">Separador (caracter que separa cada candidato): </label>
@@ -61,7 +61,7 @@
 
     <label for="cadidate_info">Texto (com as informações de cada candidato): </label>
     <br>
-    <textarea id="cadidate_info" name="cadidate_info" rows="25" cols="50" placeholder="10008202, Nome Candidato, 17.00, 23, 31.00, 48, 48.00 / 10005255, Nome Candidato 2, 25.00, 37, 38.00, 54, 63.00 / 10008229, Nome Candidato 3, 24.00, 37, 28.00, 49, 52.00 / 10002848, Nome Candidato 4, 26.00, 32, 30.00, 41, 56.00 "></textarea>
+    <textarea id="cadidate_info" name="cadidate_info" rows="15" cols="55" placeholder="10008202, Nome Candidato, 17.00, 23, 31.00, 48, 48.00 / 10005255, Nome Candidato 2, 25.00, 37, 38.00, 54, 63.00 / 10008229, Nome Candidato 3, 24.00, 37, 28.00, 49, 52.00 / 10002848, Nome Candidato 4, 26.00, 32, 30.00, 41, 56.00 "></textarea>
     <br><br>
 
     <h2>Lista de classificação</h2>
@@ -87,12 +87,13 @@
             let radio_html = ""
             for (idx in fields)
             {
-                let field = fields[idx];
-                radio_html += `<input type="radio" id="order_by_${field}" name="order_by" value="${field}"><label for="order_by_${field}" onclick="return update_UI_table();">${field}</label><br>`;
+                let field = fields[idx].trim();
+                radio_html += `<input type="radio" id="order_by_${field}" name="order_by" value="${field}"><label for="order_by_${field}" onclick="update_UI_table(\'${field}\')">${field}</label><br>`;
             }
             oder_by_field_div.innerHTML = radio_html;
         }
 
+        // Add an event to trigger when the user updates the fields text
         fields_input.addEventListener("input", () => {
             const fields_str = event.target.value;
 
@@ -167,29 +168,30 @@
             return table_html;
         }
 
-        function update_UI_table()
+        function update_UI_table(order_by_field_str)
         {
             // Parse the data and update the HTML
             // Stop if the data is invalid
+            if (fields_input.value == undefined || fields_input.value == ""){return;}
             let fields = parse_fields(fields_input.value, /,|\se\s/);
-            if (fields == undefined){return;}
 
-            let order_by_field_str = document.querySelector('input[name="order_by"]:checked').value;
-            if (order_by_field_str == undefined){return;}
-
+            if ( (candidate_info_input.value == undefined) || (candidate_info_input.value == "")){return;}
             let candidate_info = parse_candidate_data(candidate_info_input.value, fields, row_sep_input.value, field_sep_input.value, order_by_field_str);
-            if ( (candidate_info == undefined) || (candidate_info == "")){return;}
 
             classification_table.innerHTML = build_calssification_table(candidate_info, fields, order_by_field_str);
         }
 
         // Update the UI at any change to the inputs
         candidate_info_input.addEventListener("input", () => {
-            update_UI_table()
+            let select_result = document.querySelector('input[name="order_by"]:checked');
+            if (select_result == undefined){return;}
+            update_UI_table(select_result.value)
         });
 
         fields_input.addEventListener("input", () => {
-            update_UI_table()
+            let select_result = document.querySelector('input[name="order_by"]:checked');
+            if (select_result == undefined){return;}
+            update_UI_table(select_result.value)
         });
 
     </script>
